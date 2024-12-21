@@ -1,0 +1,15 @@
+# JetBrains configuration folder.
+.idea/
+
+# Binary files
+bin/
+
+# SQLite DB file
+*.sqlite
+
+# Local config files
+config.yaml
+
+# Tests coverage
+cover.out
+cover.html

@@ -1,0 +1,25 @@
+# cp config.default.yaml config.yaml
+
+# Where application will store data. Possible values: sqlite.
+dbms: sqlite
+
+# Log settings.
+logger:
+  # Log level parameter. Possible values: debug, info, warn, error.
+  level: "info"
+
+# SQLite3 settings.
+sqlite:
+  # sqlite3 database destination string.
+  dsn: homeset.sqlite
+
+# HTTP server settings.
+http:
+  # Server port without :.
+  port: "8080"
+  # Server read timeout.
+  readTimeout: "5s"
+  # Server write timeout.
+  writeTimeout: "5s"
+  # Server shutdown timeout.
+  shutdownTimeout: "5s"
