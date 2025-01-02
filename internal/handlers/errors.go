@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
-	"log/slog"
 	"net/http"
 	"strings"
 
@@ -23,11 +21,13 @@ func ErrorHandler(w http.ResponseWriter, message string, statusCode int) {
 func handleBadRequestError(w http.ResponseWriter, message string) {
 	if !strings.Contains(message, "doesn't match schema") {
 		responseError(w, http.StatusBadRequest, message)
+		return
 	}
 
 	parts := strings.Split(message, ":")
 	if len(parts) != 4 {
 		responseError(w, http.StatusBadRequest, message)
+		return
 	}
 
 	errorMessage := strings.Join(parts[2:], ":")
@@ -39,18 +39,10 @@ func handleBadRequestError(w http.ResponseWriter, message string) {
 }
 
 func responseError(w http.ResponseWriter, code int, message string) {
-	w.WriteHeader(code)
-
 	apiErr := api.Error{
 		StatusCode: code,
 		Error:      message,
 	}
 
-	errMessage, err := json.Marshal(&apiErr)
-	if err != nil {
-		slog.Error(err.Error())
-		return
-	}
-
-	response(w, code, errMessage)
+	response(w, code, apiErr)
 }

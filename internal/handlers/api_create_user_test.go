@@ -74,7 +74,7 @@ func (s *apiCreateUserSuite) TestHTTP_OK() {
 	}
 	responseJSONBody, err := json.Marshal(expectedResponse)
 	s.Require().NoError(err)
-	s.Require().Equal(string(responseJSONBody), w.Body.String())
+	s.Require().Equal(string(responseJSONBody)+"\n", w.Body.String())
 }
 
 func (s *apiCreateUserSuite) TestHTTP_Error_EmptyPassword() {
@@ -100,7 +100,7 @@ func (s *apiCreateUserSuite) TestHTTP_Error_EmptyPassword() {
 	}
 	responseJSONBody, err := json.Marshal(expectedResponse)
 	s.Require().NoError(err)
-	s.Require().Equal(string(responseJSONBody), w.Body.String())
+	s.Require().Equal(string(responseJSONBody)+"\n", w.Body.String())
 }
 
 func (s *apiCreateUserSuite) TestHTTP_Error_EmptyUsername() {
@@ -126,7 +126,7 @@ func (s *apiCreateUserSuite) TestHTTP_Error_EmptyUsername() {
 	}
 	responseJSONBody, err := json.Marshal(expectedResponse)
 	s.Require().NoError(err)
-	s.Require().Equal(string(responseJSONBody), w.Body.String())
+	s.Require().Equal(string(responseJSONBody)+"\n", w.Body.String())
 }
 
 func (s *apiCreateUserSuite) TestHTTP_Error_Unexpected() {
@@ -159,5 +159,5 @@ func (s *apiCreateUserSuite) TestHTTP_Error_Unexpected() {
 	}
 	responseJSONBody, err := json.Marshal(expectedResponse)
 	s.Require().NoError(err)
-	s.Require().Equal(string(responseJSONBody), w.Body.String())
+	s.Require().Equal(string(responseJSONBody)+"\n", w.Body.String())
 }

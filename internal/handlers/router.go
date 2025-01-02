@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -62,10 +63,11 @@ func (router *Router) setupMiddleware() error {
 	return nil
 }
 
-func response(w http.ResponseWriter, code int, msg []byte) {
+func response(w http.ResponseWriter, code int, msg interface{}) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 
-	_, err := w.Write(msg)
+	err := json.NewEncoder(w).Encode(msg)
 	if err != nil {
 		slog.Error(err.Error())
 	}

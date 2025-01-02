@@ -9,7 +9,6 @@ import (
 	"github.com/oustrix/homeset/internal/domain/users"
 	"github.com/oustrix/homeset/internal/models"
 	"github.com/oustrix/homeset/internal/pkg/homeset/http/api"
-	"github.com/samber/lo"
 )
 
 func (router *Router) APICreateUser(w http.ResponseWriter, r *http.Request) {
@@ -26,12 +25,7 @@ func (router *Router) APICreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := json.Marshal(lo.ToPtr(marshalCreateUserResponse(result)))
-	if err != nil {
-		responseError(w, http.StatusInternalServerError, err.Error())
-	}
-
-	response(w, http.StatusCreated, res)
+	response(w, http.StatusCreated, marshalCreateUserResponse(result))
 }
 
 func unmarshalCreateUserRequest(req api.CreateUserRequest) users.CreateUserParams {
