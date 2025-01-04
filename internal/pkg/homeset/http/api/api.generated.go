@@ -37,7 +37,6 @@ type Error struct {
 
 // User defines model for User.
 type User struct {
-	Id       int64  `json:"id"`
 	Username string `json:"username"`
 }
 
@@ -202,14 +201,13 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/7RTTYsTQRD9K0Ppsckk6yLSNxXBBQ8i7EkWaaYrSUv6Y6tqdjeE+e9SPROSMEER9JRO",
-	"V9V7r1+9OUCXY8kJkzDYA3C3xejq8SOhE7xnpG/42COLXhbKBUkC1pbimJ8zeT1H9/IF00a2YFc37wzE",
-	"kI7/bw3IviBYYKGQNjAY6BkpuYh/PToYIHzsA6EH+/2EY05qHgZzoZ5LToxz+Tqrv68J12DhVXvyop2M",
-	"aBXhKmll+USUaQ6Mx+vZs1mc9Pyjyx7P6iEJbq7wnHebCVVp7yfhl6yh7mGdKToZQd/egplxXHr/e3eD",
-	"h7P2h0HrIa1znQyy09HPOSKjgIEnJA45gYXVYrlYKlUumFwJYOFNvdItybbKbV0J7dOqVfgxTXnMmL7J",
-	"ScjpzoOF91/vTruEUR6yfMh+r81dToKpzrlSdqGrk+1PVh3HPP9pyfOoD8NoxRidKu9mufovhFM6K6FH",
-	"7igUGV3UetPVVg+1unb9Tv6ZijG914gTvhTsBH1z7DHAfYyO9mCnb4sb1yR8bnR/i2rYrwAAAP//EsLz",
-	"ME0EAAA=",
+	"H4sIAAAAAAAC/7RTwYrUQBD9lVB6bCYzqwfpm4rgggcR9iSLNEnNTMukureqsrvDkn+X6iRkJQMquKfp",
+	"6apX7/WrlydoUpcTIamAfwJpjtiFcvzIGBRvBPkb3vUoapeZU0bWiKUlB5GHxK2du/D4BemgR/C7q3cO",
+	"ukjz/7cO9JwRPIhypAMMDnpBptDhP0MHB4x3fWRswX9f5rhFze3gflMvOZHgWr5h7fc14x48vKoXL+rJ",
+	"iNomXCQtLJ+YE68H43y9erZo0F5+NKnFZ/VIiocLPM+73TTVaG8m4evnzJb+pWm3g5Ui7VMBRT0Z6nPq",
+	"UFDBwT2yxETgYbfZbrb2gpSRQo7g4U25Mt/1WATUIcf6flfb+DEfaUyNqQwaE1234OH91+tlOzAqQ9EP",
+	"qT1bc5NIkQou5HyKTUHWP8V0zAn909rW4R2G0YUxDEXe1Xb3IoRT3gphi9JwzDq6aPWqKa0tlOo+9Cf9",
+	"byrGPF4iJnzM2Ci21dzjQPquC3wGP30tUoWK8KGy/W2KYb8CAAD///gvW48fBAAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

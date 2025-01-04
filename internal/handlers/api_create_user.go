@@ -43,7 +43,6 @@ func marshalCreateUserResponse(result users.CreateUserResult) api.CreateUserResp
 
 func marshalUser(user models.User) api.User {
 	return api.User{
-		Id:       user.ID,
 		Username: user.Username,
 	}
 }

@@ -3,7 +3,6 @@ package users_test
 import (
 	"context"
 	"errors"
-	"math/rand/v2"
 	"testing"
 
 	"github.com/gojuno/minimock/v3"
@@ -45,7 +44,6 @@ func (s *createUserSuite) TestUC_OK() {
 			s.Require().NoError(compareErr)
 
 			return models.User{
-				ID:           rand.Int64(),
 				Username:     username,
 				PasswordHash: string(passwordHash),
 			}, nil

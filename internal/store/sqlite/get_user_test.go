@@ -2,7 +2,6 @@ package sqlite_test
 
 import (
 	"context"
-	"math/rand/v2"
 	"testing"
 
 	"github.com/google/uuid"
@@ -43,27 +42,7 @@ func (s *getUserIntegrationSuite) TestSQLite_OK() {
 	s.Require().NotEmpty(createdUser)
 
 	foundUser, err := s.storage.GetUser(ctx, dto.GetUserInput{
-		IDEq:       zero.IntFrom(createdUser.ID),
 		UsernameEq: zero.StringFrom(createdUser.Username),
-	})
-	s.Require().NoError(err)
-	s.Require().NotEmpty(foundUser)
-
-	s.Require().EqualValues(createdUser, foundUser)
-}
-
-func (s *getUserIntegrationSuite) TestSQLite_OK_ByID() {
-	ctx := context.Background()
-
-	createdUser, err := s.storage.CreateUser(ctx, dto.CreateUserInput{
-		Username:     uuid.NewString(),
-		PasswordHash: uuid.NewString(),
-	})
-	s.Require().NoError(err)
-	s.Require().NotEmpty(createdUser)
-
-	foundUser, err := s.storage.GetUser(ctx, dto.GetUserInput{
-		IDEq: zero.IntFrom(createdUser.ID),
 	})
 	s.Require().NoError(err)
 	s.Require().NotEmpty(foundUser)
@@ -92,7 +71,7 @@ func (s *getUserIntegrationSuite) TestSQLite_OK_ByUsername() {
 
 func (s *getUserIntegrationSuite) TestSQLite_Error_NotFound() {
 	user, err := s.storage.GetUser(context.Background(), dto.GetUserInput{
-		IDEq: zero.IntFrom(rand.Int64()),
+		UsernameEq: zero.StringFrom(uuid.NewString()),
 	})
 	s.Require().ErrorIs(err, store.ErrNotFound)
 	s.Require().Empty(user)

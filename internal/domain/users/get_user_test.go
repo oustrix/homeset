@@ -3,7 +3,6 @@ package users_test
 import (
 	"context"
 	"errors"
-	"math/rand/v2"
 	"testing"
 
 	"github.com/guregu/null/zero"
@@ -32,7 +31,6 @@ func (s *getUserSuite) TestUC_OK() {
 	ctrl := minimock.NewController(s.T())
 
 	user := models.User{
-		ID:           rand.Int64(),
 		Username:     uuid.NewString(),
 		PasswordHash: uuid.NewString(),
 	}
@@ -40,7 +38,6 @@ func (s *getUserSuite) TestUC_OK() {
 	storage := mocks.NewGetUserRepositoryMock(ctrl)
 	storage.GetUserMock.
 		Expect(minimock.AnyContext, dto.GetUserInput{
-			IDEq:       zero.IntFrom(user.ID),
 			UsernameEq: zero.StringFrom(user.Username),
 		}).
 		Return(user, nil)
@@ -50,7 +47,6 @@ func (s *getUserSuite) TestUC_OK() {
 	})
 
 	result, err := handle(context.Background(), users.GetUserParams{
-		ID:       zero.IntFrom(user.ID),
 		Username: zero.StringFrom(user.Username),
 	})
 	s.Require().NoError(err)
@@ -62,12 +58,12 @@ func (s *getUserSuite) TestUC_OK() {
 func (s *getUserSuite) TestUC_Error_NotFound() {
 	ctrl := minimock.NewController(s.T())
 
-	id := zero.IntFrom(rand.Int64())
+	username := uuid.NewString()
 
 	storage := mocks.NewGetUserRepositoryMock(ctrl)
 	storage.GetUserMock.
 		Expect(minimock.AnyContext, dto.GetUserInput{
-			IDEq: id,
+			UsernameEq: zero.StringFrom(username),
 		}).
 		Return(models.User{}, store.ErrNotFound)
 
@@ -76,7 +72,7 @@ func (s *getUserSuite) TestUC_Error_NotFound() {
 	})
 
 	result, err := handle(context.Background(), users.GetUserParams{
-		ID: id,
+		Username: zero.StringFrom(username),
 	})
 	s.Require().ErrorIs(err, users.ErrUserNotFound)
 	s.Require().Empty(result)

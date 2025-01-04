@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"math/rand/v2"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -34,7 +33,6 @@ func (s *apiCreateUserSuite) TestHTTP_OK() {
 		password = uuid.NewString()
 
 		user = models.User{
-			ID:           rand.Int64(),
 			Username:     username,
 			PasswordHash: uuid.NewString(),
 		}
@@ -68,7 +66,6 @@ func (s *apiCreateUserSuite) TestHTTP_OK() {
 
 	expectedResponse := api.CreateUserResponse{
 		User: api.User{
-			Id:       user.ID,
 			Username: user.Username,
 		},
 	}

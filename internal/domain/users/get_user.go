@@ -22,8 +22,6 @@ var (
 
 // GetUserParams used to provide data for GetUser.
 type GetUserParams struct {
-	// User ID.
-	ID zero.Int
 	// User name.
 	Username zero.String
 }
@@ -80,7 +78,6 @@ func (uc *getUser) handle(ctx context.Context, params GetUserParams) (GetUserRes
 
 func (uc *getUser) buildGetUserInput(params GetUserParams) dto.GetUserInput {
 	return dto.GetUserInput{
-		IDEq:       params.ID,
 		UsernameEq: params.Username,
 	}
 }

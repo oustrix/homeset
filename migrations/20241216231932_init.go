@@ -16,8 +16,7 @@ func upInit(ctx context.Context, tx *sql.Tx) error {
 		ctx,
 		`
 		CREATE TABLE IF NOT EXISTS users (
-            id            INTEGER PRIMARY KEY,
-            username      TEXT    UNIQUE NOT NULL,
+            username      TEXT    PRIMARY KEY,
             password_hash TEXT    NOT NULL
          );
 		`,

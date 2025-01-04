@@ -47,7 +47,7 @@ func (s *createUserIntegrationSuite) Test_OK() {
 	s.Require().NotEmpty(createdUser)
 
 	foundUser, err := s.storage.GetUser(ctx, dto.GetUserInput{
-		IDEq: zero.IntFrom(createdUser.ID),
+		UsernameEq: zero.StringFrom(createdUser.Username),
 	})
 	s.Require().NoError(err)
 	s.Require().NotEmpty(foundUser)

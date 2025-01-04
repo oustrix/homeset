@@ -15,10 +15,6 @@ func (s *Storage) GetUser(ctx context.Context, input dto.GetUserInput) (models.U
 		Select(store.UsersTableColumns).
 		From(store.UsersTable)
 
-	if input.IDEq.Valid {
-		query = query.Where(sq.Eq{"id": input.IDEq.Int64})
-	}
-
 	if input.UsernameEq.Valid {
 		query = query.Where(sq.Eq{"username": input.UsernameEq.String})
 	}
