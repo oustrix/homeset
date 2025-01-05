@@ -18,6 +18,8 @@ paths:
     post:
       summary: Creates a new user.
       operationId: APICreateUser
+      tags:
+        - api
       requestBody:
         content:
           application/json:
@@ -36,6 +38,20 @@ paths:
             application/json:
               schema:
                 $ref:  '#/components/schemas/Error'
+
+  #
+  # Pages
+  #
+
+  /:
+    get:
+      summary: Index page
+      operationId: PageIndex
+      tags:
+        - pages
+      responses:
+        '200':
+          description: Index page
 
 
 #

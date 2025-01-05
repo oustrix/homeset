@@ -45,6 +45,9 @@ type APICreateUserJSONRequestBody = CreateUserRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// Index page
+	// (GET /)
+	PageIndex(w http.ResponseWriter, r *http.Request)
 	// Creates a new user.
 	// (POST /api/v1/users)
 	APICreateUser(w http.ResponseWriter, r *http.Request)
@@ -58,6 +61,20 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(http.Handler) http.Handler
+
+// PageIndex operation middleware
+func (siw *ServerInterfaceWrapper) PageIndex(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.PageIndex(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
 
 // APICreateUser operation middleware
 func (siw *ServerInterfaceWrapper) APICreateUser(w http.ResponseWriter, r *http.Request) {
@@ -193,6 +210,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 		ErrorHandlerFunc:   options.ErrorHandlerFunc,
 	}
 
+	m.HandleFunc("GET "+options.BaseURL+"/", wrapper.PageIndex)
 	m.HandleFunc("POST "+options.BaseURL+"/api/v1/users", wrapper.APICreateUser)
 
 	return m
@@ -201,13 +219,14 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/7RTwYrUQBD9lVB6bCYzqwfpm4rgggcR9iSLNEnNTMukureqsrvDkn+X6iRkJQMquKfp",
-	"6apX7/WrlydoUpcTIamAfwJpjtiFcvzIGBRvBPkb3vUoapeZU0bWiKUlB5GHxK2du/D4BemgR/C7q3cO",
-	"ukjz/7cO9JwRPIhypAMMDnpBptDhP0MHB4x3fWRswX9f5rhFze3gflMvOZHgWr5h7fc14x48vKoXL+rJ",
-	"iNomXCQtLJ+YE68H43y9erZo0F5+NKnFZ/VIiocLPM+73TTVaG8m4evnzJb+pWm3g5Ui7VMBRT0Z6nPq",
-	"UFDBwT2yxETgYbfZbrb2gpSRQo7g4U25Mt/1WATUIcf6flfb+DEfaUyNqQwaE1234OH91+tlOzAqQ9EP",
-	"qT1bc5NIkQou5HyKTUHWP8V0zAn909rW4R2G0YUxDEXe1Xb3IoRT3gphi9JwzDq6aPWqKa0tlOo+9Cf9",
-	"byrGPF4iJnzM2Ci21dzjQPquC3wGP30tUoWK8KGy/W2KYb8CAAD///gvW48fBAAA",
+	"H4sIAAAAAAAC/7RTTYvbMBD9K2bao4iTbQ/Ft7YUGuhhKeypLEXYL45KLGk1492E4P9eRo5JggNtoXvx",
+	"h+bjvXnzdKQ6dDF4eGGqjsT1Fp3Nn58TrOCBkb7jqQeLHsYUIpI45JRomV9CavS7s/tv8K1sqVrdfTDU",
+	"OT/9vzckhwiqiCU539JgqGckbzv8c+lgKOGpdwkNVT/OfcyZzeNgrthzDJ4xp6+1+n6bsKGK3pRnLcqT",
+	"EKV2uAmaUb6kFNK8Mabj2dgsVnr+WYcGF3HnBe0NnMtsc+qqsA8n4vNxJkn/UrTHQUPOb0IucrLTqq+h",
+	"A0PI0DMSu+CpotViuVjqBCHC2+ioonf5SHWXbSZQ6qNFNooSs+KCXzdU0b1tsfYN9qRExn3kkrvlUl8N",
+	"uE4uyoiVM4toW2Tm3HedTYfrgCGxLesw+ss6iaHSRlc+r0qdbzRo4BtsPt6vz/agURqwfArNQZPr4AU+",
+	"19kYd67OleUvVnLTFfmTb+a3ZxjGNVxNv3oVwJPhM+C1tBov6pzaUI5ubL+T/8ZivBC3gD32EbWgKaac",
+	"y82O7LmwhcdLoftbXKxY/aZWHX4HAAD//0Yb9pSvBAAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
