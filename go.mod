@@ -16,6 +16,7 @@ require (
 	github.com/oapi-codegen/oapi-codegen/v2 v2.4.1
 	github.com/pressly/goose/v3 v3.24.0
 	github.com/stretchr/testify v1.10.0
+	github.com/urfave/negroni v1.0.0
 	golang.org/x/crypto v0.31.0
 )
 

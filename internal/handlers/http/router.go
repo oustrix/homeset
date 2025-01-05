@@ -1,15 +1,15 @@
-package handlers
+package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"log/slog"
 	"net/http"
 
-	oapimiddleware "github.com/oapi-codegen/nethttp-middleware"
 	"github.com/oustrix/homeset/internal/domain/users"
 	"github.com/oustrix/homeset/internal/pkg/homeset/http/api"
 )
+
+type Middleware = func(http.Handler) http.Handler
 
 type Router struct {
 	engine http.Handler
@@ -21,8 +21,9 @@ type Router struct {
 
 // RouterConfig used to provide data for NewRouter.
 type RouterConfig struct {
-	CreateUser users.CreateUser
-	GetUser    users.GetUser
+	CreateUser  users.CreateUser
+	GetUser     users.GetUser
+	Middlewares []Middleware
 }
 
 func NewRouter(config RouterConfig) (http.Handler, error) {
@@ -36,31 +37,11 @@ func NewRouter(config RouterConfig) (http.Handler, error) {
 	api.HandlerFromMux(router, r)
 	router.engine = r
 
-	err := router.setupMiddleware()
-	if err != nil {
-		return nil, fmt.Errorf("setupMiddleware: %w", err)
+	for _, middleware := range config.Middlewares {
+		router.engine = middleware(router.engine)
 	}
 
 	return router.engine, nil
-}
-
-func (router *Router) setupMiddleware() error {
-	// Swagger
-	swagger, err := api.GetSwagger()
-	if err != nil {
-		return fmt.Errorf("api.GetSwagger: %w", err)
-	}
-
-	swagger.Servers = nil
-
-	router.engine = oapimiddleware.OapiRequestValidatorWithOptions(
-		swagger,
-		&oapimiddleware.Options{
-			ErrorHandler: ErrorHandler,
-		},
-	)(router.engine)
-
-	return nil
 }
 
 func response(w http.ResponseWriter, code int, msg interface{}) {

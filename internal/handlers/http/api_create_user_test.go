@@ -1,4 +1,4 @@
-package handlers_test
+package http_test
 
 import (
 	"context"
@@ -10,8 +10,9 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	oapimiddleware "github.com/oapi-codegen/nethttp-middleware"
 	"github.com/oustrix/homeset/internal/domain/users"
-	"github.com/oustrix/homeset/internal/handlers"
+	httpHandlers "github.com/oustrix/homeset/internal/handlers/http"
 	"github.com/oustrix/homeset/internal/models"
 	"github.com/oustrix/homeset/internal/pkg/homeset/http/api"
 	"github.com/stretchr/testify/suite"
@@ -19,12 +20,25 @@ import (
 
 type apiCreateUserSuite struct {
 	suite.Suite
+
+	middlewares []httpHandlers.Middleware
 }
 
 func TestAPICreateUser(t *testing.T) {
 	t.Parallel()
 
 	suite.Run(t, new(apiCreateUserSuite))
+}
+
+func (s *apiCreateUserSuite) SetupSuite() {
+	swagger, err := api.GetSwagger()
+	s.Require().NoError(err)
+
+	s.middlewares = []httpHandlers.Middleware{
+		oapimiddleware.OapiRequestValidatorWithOptions(swagger, &oapimiddleware.Options{
+			ErrorHandler: httpHandlers.ErrorHandler,
+		}),
+	}
 }
 
 func (s *apiCreateUserSuite) TestHTTP_OK() {
@@ -45,7 +59,7 @@ func (s *apiCreateUserSuite) TestHTTP_OK() {
 		return users.CreateUserResult{User: user}, nil
 	}
 
-	router, err := handlers.NewRouter(handlers.RouterConfig{
+	router, err := httpHandlers.NewRouter(httpHandlers.RouterConfig{
 		CreateUser: createUser,
 	})
 	s.Require().NoError(err)
@@ -75,7 +89,9 @@ func (s *apiCreateUserSuite) TestHTTP_OK() {
 }
 
 func (s *apiCreateUserSuite) TestHTTP_Error_EmptyPassword() {
-	router, err := handlers.NewRouter(handlers.RouterConfig{})
+	router, err := httpHandlers.NewRouter(httpHandlers.RouterConfig{
+		Middlewares: s.middlewares,
+	})
 	s.Require().NoError(err)
 
 	requestBody := api.CreateUserRequest{
@@ -101,7 +117,9 @@ func (s *apiCreateUserSuite) TestHTTP_Error_EmptyPassword() {
 }
 
 func (s *apiCreateUserSuite) TestHTTP_Error_EmptyUsername() {
-	router, err := handlers.NewRouter(handlers.RouterConfig{})
+	router, err := httpHandlers.NewRouter(httpHandlers.RouterConfig{
+		Middlewares: s.middlewares,
+	})
 	s.Require().NoError(err)
 
 	requestBody := api.CreateUserRequest{
@@ -131,7 +149,7 @@ func (s *apiCreateUserSuite) TestHTTP_Error_Unexpected() {
 		return users.CreateUserResult{}, errors.New("some unexpected error")
 	}
 
-	router, err := handlers.NewRouter(handlers.RouterConfig{
+	router, err := httpHandlers.NewRouter(httpHandlers.RouterConfig{
 		CreateUser: createUser,
 	})
 	s.Require().NoError(err)

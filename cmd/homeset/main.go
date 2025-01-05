@@ -8,9 +8,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	oapimiddleware "github.com/oapi-codegen/nethttp-middleware"
 	"github.com/oustrix/homeset/internal/config"
 	"github.com/oustrix/homeset/internal/domain/users"
-	"github.com/oustrix/homeset/internal/handlers"
+	"github.com/oustrix/homeset/internal/handlers/http"
+	"github.com/oustrix/homeset/internal/handlers/http/middleware"
+	"github.com/oustrix/homeset/internal/pkg/homeset/http/api"
 	"github.com/oustrix/homeset/pkg/httpserver"
 	"github.com/oustrix/homeset/pkg/logger"
 )
@@ -81,15 +84,38 @@ func main() {
 	slog.InfoContext(ctx, "use cases created")
 
 	//
+	// Swagger
+	//
+	swagger, err := api.GetSwagger()
+	if err != nil {
+		panic(fmt.Errorf("failed to get swagger spec: %w", err))
+	}
+
+	swagger.Servers = nil
+
+	swaggerMiddleware := oapimiddleware.OapiRequestValidatorWithOptions(
+		swagger,
+		&oapimiddleware.Options{
+			ErrorHandler: http.ErrorHandler,
+		},
+	)
+
+	//
 	// HTTP
 	//
-	router, err := handlers.NewRouter(handlers.RouterConfig{
+	router, err := http.NewRouter(http.RouterConfig{
 		CreateUser: createUser,
 		GetUser:    getUser,
+		Middlewares: []http.Middleware{
+			swaggerMiddleware,
+			middleware.Logger,
+		},
 	})
 	if err != nil {
 		panic(fmt.Errorf("failed to create router: %w", err))
 	}
+
+	slog.InfoContext(ctx, "router created")
 
 	httpServer := httpserver.New(
 		router,
