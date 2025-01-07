@@ -8,6 +8,7 @@ require (
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/getkin/kin-openapi v0.127.0
 	github.com/gojuno/minimock/v3 v3.4.0
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/ilyakaznacheev/cleanenv v1.5.0

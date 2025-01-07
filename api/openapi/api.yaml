@@ -53,6 +53,14 @@ paths:
         '200':
           description: Index page
 
+  /login:
+    get:
+      summary: Login page
+      operationId: PageLogin
+      responses:
+        '200':
+          description: Login page
+
 
 #
 # Components
