@@ -107,7 +107,9 @@ func main() {
 		CreateUser: createUser,
 		GetUser:    getUser,
 		Middlewares: []http.Middleware{
+			// Order makes sense. LIFO.
 			swaggerMiddleware,
+			middleware.Auth(cfg.HTTP.JWTToken),
 			middleware.Logger,
 		},
 	})

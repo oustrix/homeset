@@ -32,6 +32,7 @@ type (
 
 	// HTTP stores http server settings.
 	HTTP struct {
+		JWTToken string `yaml:"jwtToken" env:"JWT_TOKEN" env-required:"true"`
 		// Port is a http server port without :.
 		Port string `yaml:"port" env:"HTTP_PORT" env-default:"8080"`
 		// ReadTimeout is a server read timeout.
